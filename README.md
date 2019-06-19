@@ -1,0 +1,1 @@
+# Configuring-Encryption-for-Data-at-Rest-in-Microsoft-Azure
