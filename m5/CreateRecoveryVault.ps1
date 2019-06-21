@@ -17,13 +17,9 @@ $RecoveryVaultParameters = @{
     Name = "$prefix-vault-$id"
     ResourceGroupName = $ResourceGroupName
     Location = $Location
-
 }
 
 $rv = New-AzRecoveryServicesVault @RecoveryVaultParameters
-
-#Set contect for Recovery Vault
-Set-AzRecoveryServicesVaultContext -Vault $rv
 
 #Grant Recovery Vault access to Key Vault
 $VaultName = "KEY_VAULT_NAME"
@@ -40,7 +36,14 @@ $VaultPolicyParameters = @{
 Set-AzKeyVaultAccessPolicy @VaultPolicyParameters
 
 #Configure Backup of Windows VM
-$pol = Get-AzRecoveryServicesBackupProtectionPolicy -WorkloadType "AzureVM"
+$pol = Get-AzRecoveryServicesBackupProtectionPolicy -WorkloadType "AzureVM" -VaultId $rv.ID
 $VMName = "WIN_VM_NAME"
 $VMResourceGroup = "VM_RESOURCE_GROUP"
 Enable-AzRecoveryServicesBackupProtection -Policy $pol -Name $VMName -ResourceGroupName $VMResourceGroup
+
+$container = Get-AzRecoveryServicesBackupContainer -VaultId $rv.id -ContainerType AzureVM -FriendlyName $VMName
+$item = Get-AzRecoveryServicesBackupItem -Container $container -WorkloadType "AzureVM"
+$endDate = (Get-Date).AddDays(60).ToUniversalTime()
+$job = Backup-AzRecoveryServicesBackupItem -Item $item -VaultId $rv.ID -ExpiryDateTimeUTC $endDate
+
+Wait-AzRecoveryServicesBackupJob -Job $job -Timeout 43200
