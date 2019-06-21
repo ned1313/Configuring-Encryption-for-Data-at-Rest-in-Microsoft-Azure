@@ -1,0 +1,62 @@
+#Log into Azure
+Add-AzAccount
+
+#Select the correct subscription
+Get-AzSubscription -SubscriptionName "SUB_NAME" | Select-AzSubscription
+
+#Set some basic variables
+$prefix = "ced"
+$Location = "eastus"
+$ResourceGroupName = "$prefix-linux-vm"
+$kekResourceGroupName = "$prefix-kek-vault"
+$id = Get-Random -Minimum 1000 -Maximum 9999
+
+#Create the necessary resource groups
+$vmRG = New-AzResourceGroup -Name $ResourceGroupName -Location $Location
+$kekRG = New-AzResourceGroup -Name $kekResourceGroupName -Location $Location
+
+#Create a new Key Vault for the VMs
+$keyVaultParameters = @{
+    Name = "$prefix-key-vault-$id"
+    ResourceGroupName = $ResourceGroupName
+    Location = $location
+    EnabledForDiskEncryption = $true
+    EnabledForDeployment = $true
+    Sku = "Standard"
+}
+$keyVault = New-AzKeyVault @keyVaultParameters
+
+#Create a new Key Vault for the KEK
+$kekVaultParameters = @{
+    Name = "$prefix-kek-$id"
+    ResourceGroupName = $kekResourceGroupName
+    Location = $location
+    EnabledForDiskEncryption = $true
+    EnabledForDeployment = $true
+    Sku = "Premium"
+}
+$kekVault = New-AzKeyVault @kekVaultParameters
+
+#Create a Key Encrypting Key
+$kekName = "$prefix-kek"
+$kek = Add-AzKeyVaultKey -VaultName $kekVault.VaultName -Name $kekName -Destination 'HSM'
+
+#Let's create a new Linux VM that we will encrypt
+$LinuxVMParameters = @{
+    adminUsername = "linuxadmin"
+    adminPasswordOrKey = 'n6Uz^)N.d!j+uE'
+    authenticationType = "password"
+    dnsName = "$prefix$id"
+    vmName = "$prefix-linux-vm"
+    keyVaultName = $keyVault.VaultName
+    keyVaultResourceGroup = $keyVault.ResourceGroupName
+    keyEncryptionKeyURL = $kek.Key.kid
+    keyEncryptionKeyVaultName = $kekVault.VaultName
+    kekVaultResourceGroup = $kekRG.ResourceGroupName
+    volumeType = "OS"
+}
+
+New-AzResourceGroupDeployment -Name "linuxVM" -ResourceGroupName $ResourceGroupName -TemplateParameterObject $LinuxVMParameters -TemplateFile .\m4\LinuxVM\linux-vm-data-disk.json -Mode Incremental
+
+Get-AzVmDiskEncryptionStatus -ResourceGroupName $vmRG.ResourceGroupName -VMName $LinuxVMParameters["VMName"]
+
