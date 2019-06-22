@@ -121,7 +121,7 @@
             "metadata": {
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
-            "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/azure-sql-managed-instance/"
+            "defaultValue": "https://raw.githubusercontent.com/ned1313/Configuring-Encryption-for-Data-at-Rest-in-Microsoft-Azure/master/m6/"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
@@ -201,9 +201,6 @@
                     },
                     "managedInstanceRouteTableName": {
                         "value": "[parameters('managedInstanceRouteTableName')]"
-                    },
-                    "miManagementIps": {
-                        "value": "[parameters('miManagementIps')]"
                     }
                 }
             }

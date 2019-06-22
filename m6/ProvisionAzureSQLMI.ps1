@@ -19,14 +19,13 @@ $SQLAdminPassword = ConvertTo-SecureString -String 'n6Uz^)N.d!j+uE' -AsPlainText
 $smiRG = New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
 #Template to use for deploying managed instance
-$templateUri = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/azure-sql-managed-instance/azuredeploy.json"
+$templateUri = "https://raw.githubusercontent.com/ned1313/Configuring-Encryption-for-Data-at-Rest-in-Microsoft-Azure/master/m6/smi-deply.json"
 
 $templateParameters = @{
     vnetResourceName = "$prefix-vnet"
     sqlManagedInstanceName = $SQLServerName
     sqlManagedInstanceAdminLogin = $SQLAdmin
     sqlManagedInstancePassword = 'n6Uz^)N.d!j+uE'
-    miManagementIps = @("0.0.0.0")
 }
 
 New-AzResourceGroupDeployment -Name "smi-vnet" -ResourceGroupName $smiRG.ResourceGroupName -TemplateUri $templateUri -TemplateParameterObject $templateParameters -Mode Incremental
