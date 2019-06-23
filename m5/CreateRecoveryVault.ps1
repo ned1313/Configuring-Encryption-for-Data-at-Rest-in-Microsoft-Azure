@@ -7,12 +7,14 @@ Get-AzSubscription -SubscriptionName "SUB_NAME" | Select-AzSubscription
 #Set some basic variables
 $prefix = "ced"
 $Location = "eastus"
-$ResourceGroupName = "$prefix-recovery-vault"
 $id = Get-Random -Minimum 1000 -Maximum 9999
+$ResourceGroupName = "$prefix-recovery-vault-$id"
+
 
 #Create the necessary resource groups
 $rvRG = New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
+#Create the Recovery Vault
 $RecoveryVaultParameters = @{
     Name = "$prefix-vault-$id"
     ResourceGroupName = $ResourceGroupName

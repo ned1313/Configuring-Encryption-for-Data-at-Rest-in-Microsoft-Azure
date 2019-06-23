@@ -9,8 +9,8 @@ Get-AzSubscription -SubscriptionName "SUB_NAME" | Select-AzSubscription
 
 #Let's create a SQL DB that we will encrypt
 $Location = "eastus"
-$ResourceGroupName = "$prefix-sql"
 $id = Get-Random -Minimum 1000 -Maximum 9999
+$ResourceGroupName = "$prefix-sql-$id"
 $SQLServerName = "$prefix-sql-$id"
 $SQLDatabaseName = "$prefix-sql-db"
 $SQLAdmin = "sqladmin"
@@ -22,6 +22,7 @@ $MyIPAddress = Invoke-RestMethod http://ipinfo.io/json | Select -ExpandProperty 
 #Now Create a resource group
 $sqlRG = New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
+#Create the SQL Server
 $sqlServerParameters = @{
     ResourceGroupName = $sqlRG.ResourceGroupName
     Location = $Location
@@ -31,6 +32,7 @@ $sqlServerParameters = @{
 
 $sqlServer = New-AzSqlServer @sqlServerParameters
 
+#Configure the firewall to allow client connections
 $sqlFirewallParameters = @{
     ResourceGroupName = $sqlRG.ResourceGroupName
     ServerName = $sqlServer.ServerName
@@ -41,6 +43,7 @@ $sqlFirewallParameters = @{
 
 $sqlFirewall = New-AzSqlServerFirewallRule @sqlFirewallParameters
 
+#Create the database
 $databaseParameters = @{
     ResourceGroupName = $sqlRG.ResourceGroupName
     ServerName = $sqlServer.ServerName
@@ -51,6 +54,7 @@ $databaseParameters = @{
 
 $database = New-AzSqlDatabase @databaseParameters
 
+#Check the TDE settings and remove encryption
 $tdeParameters = @{
     ResourceGroupName = $sqlRG.ResourceGroupName
     ServerName = $sqlServer.ServerName

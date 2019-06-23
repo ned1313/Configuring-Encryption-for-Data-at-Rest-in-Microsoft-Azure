@@ -7,9 +7,10 @@ Get-AzSubscription -SubscriptionName "SUB_NAME" | Select-AzSubscription
 #Set some basic variables
 $prefix = "ced"
 $Location = "eastus"
-$ResourceGroupName = "$prefix-linux-vm"
-$kekResourceGroupName = "$prefix-kek-vault"
 $id = Get-Random -Minimum 1000 -Maximum 9999
+$ResourceGroupName = "$prefix-linux-vm-$id"
+$kekResourceGroupName = "$prefix-kek-vault-$id"
+
 
 #Create the necessary resource groups
 $vmRG = New-AzResourceGroup -Name $ResourceGroupName -Location $Location
@@ -58,5 +59,6 @@ $LinuxVMParameters = @{
 
 New-AzResourceGroupDeployment -Name "linuxVM" -ResourceGroupName $ResourceGroupName -TemplateParameterObject $LinuxVMParameters -TemplateFile .\m4\LinuxVM\linux-vm-data-disk.json -Mode Incremental
 
+#Once creation is finished, check on the encryption status of the VM
 Get-AzVmDiskEncryptionStatus -ResourceGroupName $vmRG.ResourceGroupName -VMName $LinuxVMParameters["VMName"]
 

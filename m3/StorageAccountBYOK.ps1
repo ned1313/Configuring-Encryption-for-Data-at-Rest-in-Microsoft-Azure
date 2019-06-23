@@ -1,10 +1,8 @@
 #Prefix for resources
 $prefix = "ced"
 
-#Location for resources
+#Basic variables
 $location = "eastus"
-
-#Random ID for Key Vault
 $id = Get-Random -Minimum 1000 -Maximum 9999
 
 #Log into Azure

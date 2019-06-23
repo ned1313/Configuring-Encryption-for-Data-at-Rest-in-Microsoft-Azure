@@ -9,12 +9,14 @@ Get-AzSubscription -SubscriptionName "SUB_NAME" | Select-AzSubscription
 
 #Let's create a SQL VM that we will apply TDE to
 $Location = "eastus"
-$ResourceGroupName = "$prefix-sql-vm"
 $id = Get-Random -Minimum 1000 -Maximum 9999
+$ResourceGroupName = "$prefix-sql-vm-$id"
 $SQLServerName = "$prefix-sql-$id"
 
+#Create the resource group for the SQL VM
 $sqlvmRG = New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
+#Deploy the SQL VM using an ARM template
 $templateParameters = @{
     adminUsername = "winadmin"
     adminPassword = 'n6Uz^)N.d!j+uE'
@@ -24,7 +26,6 @@ $templateParameters = @{
 }
 
 New-AzResourceGroupDeployment -Name "ced-sql-vm" -ResourceGroupName $sqlvmRG.ResourceGroupName -TemplateParameterObject $templateParameters -TemplateFile .\m6\sql-vm.json -Mode Incremental
-
 
 #Now we need to create a Key Vault to use with the SQL VM
 $keyVaultParameters = @{
@@ -37,6 +38,7 @@ $keyVaultParameters = @{
 }
 $keyVault = New-AzKeyVault @keyVaultParameters
 
+#And add a key that the server will be used for TDE
 $sqlkey = Add-AzKeyVaultKey -VaultName $keyVault.VaultName -Name "$prefix-sql-key" -Destination 'Software'
 
 #Now create an AAD SPN to use with SQL VM

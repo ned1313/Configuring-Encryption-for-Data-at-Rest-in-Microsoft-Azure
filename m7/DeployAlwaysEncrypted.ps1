@@ -7,10 +7,10 @@ Add-AzAccount
 #Select the correct subscription
 Get-AzSubscription -SubscriptionName "SUB_NAME" | Select-AzSubscription
 
-#Let's create a SQL VM that we will apply TDE to
+#Let's create a SQL Server that we will use Always Encrypted with
 $Location = "eastus"
-$ResourceGroupName = "$prefix-sql-ae"
 $id = Get-Random -Minimum 1000 -Maximum 9999
+$ResourceGroupName = "$prefix-sql-ae-$id"
 $SQLServerName = "$prefix-sql-$id"
 $SQLDatabaseName = "Clinic"
 $SQLAdmin = "sqladmin"
@@ -19,9 +19,10 @@ $SQLAdminCredentials = New-Object -TypeName System.Management.Automation.PSCrede
 
 $MyIPAddress = Invoke-RestMethod http://ipinfo.io/json | Select -ExpandProperty ip
 
+#Create a resource group for the SQL Server
 $sqlAeRG = New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
-#Now we need to create a Key Vault to use with the SQL VM
+#Now we need to create a Key Vault to use with the SQL Server
 $keyVaultParameters = @{
     Name = "$prefix-key-vault-$id"
     ResourceGroupName = $sqlAeRG.ResourceGroupName
@@ -90,9 +91,10 @@ $databaseParameters = @{
 
 $database = New-AzSqlDatabase @databaseParameters
 
+#Now connect to SQL DB with SSMS and configure AE
+
 #Connection info for CS application
 $connectionString = "Server=tcp:$($sqlServer.ServerName).database.windows.net,1433;Initial Catalog=$SQLDatabaseName;Persist Security Info=False;User ID=$SQLAdmin;Password=$SQLAdminPassword;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-
 
 #Azure AD Application ID
 Write-Output $sp.ApplicationId.Guid
