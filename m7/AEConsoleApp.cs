@@ -1,30 +1,36 @@
 using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Data;
-    using System.Data.SqlClient;
-    using Microsoft.IdentityModel.Clients.ActiveDirectory;
-    using Microsoft.SqlServer.Management.AlwaysEncrypted.AzureKeyVaultProvider;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data;
+using System.Data.SqlClient;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.SqlServer.Management.AlwaysEncrypted.AzureKeyVaultProvider;
 
-    namespace AlwaysEncryptedConsoleAKVApp
-    {
+namespace AlwaysEncryptedConsoleAKVApp
+{
     class Program
     {
-        // Update this line with your Clinic database connection string from the Azure portal.
-        static string connectionString = @"Server=tcp:ced-sql-3466.database.windows.net,1433;Initial Catalog=Clinic;Persist Security Info=False;User ID=sqladmin;Password=System.Security.SecureString;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-        static string applicationId = @"08b72c9d-1422-4e57-bdb7-9709a56baf53";
-        static string clientKey = "9MPG7j2MAH3fEveE58vxxg0ghjo9sEutitv9jBeyjfqTLpb9sGBhXQSY9yn2";
+        static string connectionString;
 
 
         static void Main(string[] args)
         {
-            InitializeAzureKeyVaultProvider();
+            Console.WriteLine(Environment.NewLine + "Enter AAD Application ID:");
+            string aadApplicationId = Console.ReadLine();
+
+            Console.WriteLine(Environment.NewLine + "Enter AAD Application Secret:");
+            string aadApplicationSecret = @Console.ReadLine();
+
+            InitializeAzureKeyVaultProvider(aadApplicationId, aadApplicationSecret);
 
             Console.WriteLine("Signed in as: " + _clientCredential.ClientId);
 
-            Console.WriteLine("Original connection string copied from the Azure portal:");
+            Console.WriteLine(Environment.NewLine + "Enter connection string with username filled out:");
+            connectionString = @Console.ReadLine();
+
+            Console.WriteLine("Connection string you entered:");
             Console.WriteLine(connectionString);
 
             // Create a SqlConnectionStringBuilder.
@@ -135,7 +141,7 @@ using System;
 
         private static ClientCredential _clientCredential;
 
-        static void InitializeAzureKeyVaultProvider()
+        static void InitializeAzureKeyVaultProvider(string applicationId, string clientKey)
         {
 
             _clientCredential = new ClientCredential(applicationId, clientKey);
@@ -248,6 +254,7 @@ using System;
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     throw;
                 }
             }
@@ -299,6 +306,7 @@ using System;
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     throw;
                 }
             }
@@ -322,6 +330,7 @@ using System;
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     returnValue = 1;
                 }
             }
@@ -336,4 +345,4 @@ using System;
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
     }
-    }
+}
