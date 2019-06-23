@@ -46,4 +46,18 @@ $item = Get-AzRecoveryServicesBackupItem -Container $container -WorkloadType "Az
 $endDate = (Get-Date).AddDays(60).ToUniversalTime()
 $job = Backup-AzRecoveryServicesBackupItem -Item $item -VaultId $rv.ID -ExpiryDateTimeUTC $endDate
 
-Wait-AzRecoveryServicesBackupJob -Job $job -Timeout 43200
+#Once Backup is complete we can do a restore
+
+#First create a storage account for the restored VHD
+$saName = "recovered$prefix$id".ToLower()
+
+$saParameters = @{
+    ResourceGroupName = $ResourceGroupName
+    Name = $saName
+    SkuName = "Standard_LRS"
+    Location = $Location
+}
+$sa = New-AzStorageAccount @saParameters
+
+#Complete restore and recovery in portal
+
