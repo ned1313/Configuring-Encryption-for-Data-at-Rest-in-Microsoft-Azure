@@ -38,7 +38,7 @@ $kekVaultParameters = @{
 }
 $kekVault = New-AzKeyVault @kekVaultParameters
 
-#Create a Key Encrypting Key
+#Create a Key Encryption Key
 $kekName = "$prefix-kek"
 $kek = Add-AzKeyVaultKey -VaultName $kekVault.VaultName -Name $kekName -Destination 'HSM'
 
