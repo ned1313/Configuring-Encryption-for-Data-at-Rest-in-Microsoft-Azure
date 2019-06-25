@@ -17,8 +17,6 @@ $SQLAdmin = "sqladmin"
 $SQLAdminPassword = ConvertTo-SecureString -String 'n6Uz^)N.d!j+uE' -AsPlainText -Force
 $SQLAdminCredentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $SQLAdmin,$SQLAdminPassword
 
-$MyIPAddress = Invoke-RestMethod http://ipinfo.io/json | Select -ExpandProperty ip
-
 #Now Create a resource group
 $sqlRG = New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
@@ -31,17 +29,6 @@ $sqlServerParameters = @{
 }
 
 $sqlServer = New-AzSqlServer @sqlServerParameters
-
-#Configure the firewall to allow client connections
-$sqlFirewallParameters = @{
-    ResourceGroupName = $sqlRG.ResourceGroupName
-    ServerName = $sqlServer.ServerName
-    FirewallRuleName = "MyIPAddress"
-    StartIpAddress = $MyIPAddress
-    EndIpAddress = $MyIPAddress
-}
-
-$sqlFirewall = New-AzSqlServerFirewallRule @sqlFirewallParameters
 
 #Create the database
 $databaseParameters = @{

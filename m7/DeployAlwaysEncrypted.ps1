@@ -33,7 +33,7 @@ $keyVaultParameters = @{
 }
 $keyVault = New-AzKeyVault @keyVaultParameters
 
-#Now create an AAD SPN to use with SQL VM
+#Now create an AAD SPN to use with Console App
 Import-Module Az.Resources # Imports the PSADPasswordCredential object
 $credProps = @{
     StartDate = Get-Date
