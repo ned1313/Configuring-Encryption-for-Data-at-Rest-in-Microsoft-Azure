@@ -19,7 +19,7 @@ $sqlvmRG = New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 #Deploy the SQL VM using an ARM template
 $templateParameters = @{
     adminUsername = "winadmin"
-    adminPassword = 'n6Uz^)N.d!j+uE'
+    adminPassword = 'GEN_ADM_PASSWORD'
     location = $Location
     dnsName = "sql$prefix$id"
     vmName = $SQLServerName
@@ -46,7 +46,7 @@ Import-Module Az.Resources # Imports the PSADPasswordCredential object
 $credProps = @{
     StartDate = Get-Date
     EndDate = (Get-Date -Year 2024)
-    Password = '9MPG7j2MAH3fEveE58vxxg0ghjo9sEutitv9jBeyjfqTLpb9sGBhXQSY9yn2'
+    Password = '9MPG7j2MAH3fEveE58vxxg0ghjo9sEutitv9jBeyjfqTLpb9sGBhXQSY9yn2' #Or generate your own, avoid special characters
 }
 $credentials = New-Object Microsoft.Azure.Commands.ActiveDirectory.PSADPasswordCredential -Property $credProps
 $sp = New-AzAdServicePrincipal -DisplayName $SQLServerName -PasswordCredential $credentials

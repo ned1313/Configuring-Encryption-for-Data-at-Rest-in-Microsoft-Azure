@@ -15,7 +15,7 @@ $VMName = "$prefix-win-vm-$id"
 
 $WinVMParameters = @{
     adminUsername = "winadmin"
-    adminPassword = 'n6Uz^)N.d!j+uE'
+    adminPassword = 'GEN_ADM_PASSWORD'
     dnsName = "$prefix$id"
     vmName = $VMName
 }

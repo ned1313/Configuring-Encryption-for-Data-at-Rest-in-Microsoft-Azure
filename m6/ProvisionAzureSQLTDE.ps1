@@ -14,7 +14,7 @@ $ResourceGroupName = "$prefix-sql-$id"
 $SQLServerName = "$prefix-sql-$id"
 $SQLDatabaseName = "$prefix-sql-db"
 $SQLAdmin = "sqladmin"
-$SQLAdminPassword = ConvertTo-SecureString -String 'n6Uz^)N.d!j+uE' -AsPlainText -Force
+$SQLAdminPassword = ConvertTo-SecureString -String 'GEN_ADM_PASSWORD' -AsPlainText -Force
 $SQLAdminCredentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $SQLAdmin,$SQLAdminPassword
 
 #Now Create a resource group

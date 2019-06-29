@@ -14,7 +14,7 @@ $ResourceGroupName = "$prefix-sql-ae-$id"
 $SQLServerName = "$prefix-sql-$id"
 $SQLDatabaseName = "Clinic"
 $SQLAdmin = "sqladmin"
-$SQLAdminPassword = ConvertTo-SecureString -String 'n6Uz^)N.d!j+uE' -AsPlainText -Force
+$SQLAdminPassword = ConvertTo-SecureString -String 'GEN_ADM_PASSWORD' -AsPlainText -Force
 $SQLAdminCredentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $SQLAdmin,$SQLAdminPassword
 
 $MyIPAddress = Invoke-RestMethod http://ipinfo.io/json | Select -ExpandProperty ip
@@ -38,7 +38,7 @@ Import-Module Az.Resources # Imports the PSADPasswordCredential object
 $credProps = @{
     StartDate = Get-Date
     EndDate = (Get-Date -Year 2024)
-    Password = '9MPG7j2MAH3fEveE58vxxg0ghjo9sEutitv9jBeyjfqTLpb9sGBhXQSY9yn2'
+    Password = '9MPG7j2MAH3fEveE58vxxg0ghjo9sEutitv9jBeyjfqTLpb9sGBhXQSY9yn2' #Or generate your own, avoid special characters
 }
 $credentials = New-Object Microsoft.Azure.Commands.ActiveDirectory.PSADPasswordCredential -Property $credProps
 $sp = New-AzAdServicePrincipal -DisplayName $SQLServerName -PasswordCredential $credentials
@@ -106,4 +106,4 @@ Write-Output $credProps["Password"]
 Write-Output $connectionString
 
 #Server Password
-Write-Output 'n6Uz^)N.d!j+uE'
+Write-Output "GEN_ADM_PASSWORD"
