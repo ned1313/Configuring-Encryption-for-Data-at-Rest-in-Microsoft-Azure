@@ -45,7 +45,7 @@ $kek = Add-AzKeyVaultKey -VaultName $kekVault.VaultName -Name $kekName -Destinat
 #Let's create a new Linux VM that we will encrypt
 $LinuxVMParameters = @{
     adminUsername = "linuxadmin"
-    adminPasswordOrKey = 'n6Uz^)N.d!j+uE'
+    adminPasswordOrKey = 'GEN_ADM_PASSWORD'
     authenticationType = "password"
     dnsName = "$prefix$id"
     vmName = "$prefix-linux-vm"
