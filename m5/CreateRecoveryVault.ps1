@@ -41,7 +41,7 @@ Set-AzKeyVaultAccessPolicy @VaultPolicyParameters
 $pol = Get-AzRecoveryServicesBackupProtectionPolicy -WorkloadType "AzureVM" -VaultId $rv.ID
 $VMName = "WIN_VM_NAME"
 $VMResourceGroup = "VM_RESOURCE_GROUP"
-Enable-AzRecoveryServicesBackupProtection -Policy $pol -Name $VMName -ResourceGroupName $VMResourceGroup
+Enable-AzRecoveryServicesBackupProtection -Policy $pol -Name $VMName -ResourceGroupName $VMResourceGroup -VaultId $rv.ID
 
 $container = Get-AzRecoveryServicesBackupContainer -VaultId $rv.id -ContainerType AzureVM -FriendlyName $VMName
 $item = Get-AzRecoveryServicesBackupItem -Container $container -WorkloadType "AzureVM"

@@ -14,7 +14,7 @@ GO
 -- Alter the TDE Login to add the credential for use by the
 -- Database Engine to access the key vault
 ALTER LOGIN EKM_Login
-ADD CREDENTIAL cedssqlcred;
+ADD CREDENTIAL cedsqlcred;
 GO
 
 -- Create a Contoso Database for TDE  
